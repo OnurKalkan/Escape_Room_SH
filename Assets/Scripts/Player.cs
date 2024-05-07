@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
@@ -11,6 +12,25 @@ public class Player : MonoBehaviour
     public GameObject itemObj = null;
     public Image itemSlot1, itemSlot2, crossHair;
     float crosshairScaleSpeed = 0.25f;
+    public bool ironShield, magneticShield;
+    public GameObject ai, aiAgent;
+
+    int fearless = 8;
+    int runSpeed = 0, aim = 0;
+
+    private void Start()
+    {
+        if(ironShield)
+            transform.Find("IronShield").gameObject.SetActive(true);
+        else if (magneticShield)
+            transform.Find("MagneticShield").gameObject.SetActive(true);
+
+        if(fearless > 5)
+        {
+            runSpeed += 1;
+            aim += 2;
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -123,6 +143,9 @@ public class Player : MonoBehaviour
             StartCoroutine(TurnKeytoGreen());            
             holdingKeyCard = false;
         }
+
+        if(ai.GetComponent<Raycast>().isActive == false)
+            aiAgent.GetComponent<NavMeshAgent>().destination = this.gameObject.transform.position;
     }
 
     IEnumerator TurnKeytoGreen()
@@ -132,5 +155,7 @@ public class Player : MonoBehaviour
         itemObj.transform.Find("KeyLightRed").gameObject.SetActive(false);        
         itemObj.transform.Find("KeyLightGreen").gameObject.SetActive(true);
         OpenDoor(itemObj.transform.parent.gameObject);
+
+        ai.GetComponent<Raycast>().isActive = false;
     }
 }
