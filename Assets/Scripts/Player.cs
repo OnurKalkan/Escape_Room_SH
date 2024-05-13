@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -14,9 +15,19 @@ public class Player : MonoBehaviour
     float crosshairScaleSpeed = 0.25f;
     public bool ironShield, magneticShield;
     public GameObject ai, aiAgent;
+    public int health = 0, shieldHealth = 0;
 
     int fearless = 8;
     int runSpeed = 0, aim = 0;
+
+    public SaveData saveData;
+
+    private void Awake()
+    {
+        saveData = GameObject.Find("GameManager").GetComponent<SaveData>();
+        health = PlayerPrefs.GetInt("PlayerHealth", 100);
+        saveData = SaveData.Instantiate(saveData);
+    }
 
     private void Start()
     {
@@ -34,11 +45,6 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.CompareTag("Door") && holdingKeyCard)
-        //{
-        //    other.transform.Find("LeftDoor").transform.DOLocalMoveZ(4.5f, 1);
-        //    other.transform.Find("RightDoor").transform.DOLocalMoveZ(-2.5f, 1);
-        //}
         if (other.CompareTag("Item"))
         {
             crossHair.color = new Color(1, 0, 0, 0.5f);//turn red
@@ -63,6 +69,15 @@ public class Player : MonoBehaviour
             crossHair.gameObject.transform.DOScale(Vector3.one * 0.5f, crosshairScaleSpeed);
             keypadActive = true;
             itemObj = other.gameObject;
+        }
+        if (other.CompareTag("NewLevel"))
+        {
+            SceneManager.LoadScene(0);
+        }
+        if (other.CompareTag("Ball"))
+        {
+            Destroy(other.gameObject);            
+            PlayerPrefs.SetInt("PlayerHealth", health);
         }
     }
 
@@ -143,9 +158,8 @@ public class Player : MonoBehaviour
             StartCoroutine(TurnKeytoGreen());            
             holdingKeyCard = false;
         }
-
-        if(ai.GetComponent<Raycast>().isActive == false)
-            aiAgent.GetComponent<NavMeshAgent>().destination = this.gameObject.transform.position;
+        //if(ai.GetComponent<Raycast>().isActive == false)
+        //    aiAgent.GetComponent<NavMeshAgent>().destination = this.gameObject.transform.position;
     }
 
     IEnumerator TurnKeytoGreen()
@@ -155,7 +169,16 @@ public class Player : MonoBehaviour
         itemObj.transform.Find("KeyLightRed").gameObject.SetActive(false);        
         itemObj.transform.Find("KeyLightGreen").gameObject.SetActive(true);
         OpenDoor(itemObj.transform.parent.gameObject);
-
+        PlayerPrefs.SetString("MainDoor", "Open");
         ai.GetComponent<Raycast>().isActive = false;
+    }
+
+    public void MainDoorOpened()
+    {
+        GameObject.Find("KeyCard").gameObject.SetActive(false);
+        GameObject.Find("Keypad").GetComponent<Collider>().enabled = false;
+        GameObject.Find("Keypad").transform.Find("KeyCard").gameObject.SetActive(true);
+        GameObject.Find("Keypad").transform.Find("KeyLightGreen").gameObject.SetActive(true);
+        GameObject.Find("KeyLightRed").gameObject.SetActive(false);
     }
 }

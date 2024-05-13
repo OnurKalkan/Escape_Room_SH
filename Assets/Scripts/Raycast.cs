@@ -19,7 +19,8 @@ public class Raycast : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(SpawnProjectile());
+        if (isActive)
+            StartCoroutine(SpawnProjectile());
     }
 
     IEnumerator SpawnProjectile()
@@ -77,23 +78,23 @@ public class Raycast : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-            print(hit.distance);
+            //print(hit.distance);
             //Debug.Log(hit.transform.gameObject.name);
             if (hit.transform.CompareTag("Player"))
             {
-                if (hit.distance > 10)
+                if (hit.distance > 10 && hit.distance < 20)
                 {
                     electricGun = false;
                     fireGun = false;
                     rangeGun = true;
                 }
-                else if (hit.transform.GetComponent<Player>().ironShield)
+                else if (hit.transform.GetComponent<Player>().ironShield && hit.distance < 10)
                 {
                     electricGun = true;
                     fireGun = false;
                     rangeGun = false;
                 }
-                else if (hit.transform.GetComponent<Player>().magneticShield)
+                else if (hit.transform.GetComponent<Player>().magneticShield && hit.distance < 10)
                 {
                     electricGun = false;
                     fireGun = true;
@@ -102,7 +103,7 @@ public class Raycast : MonoBehaviour
                 else
                 {
                     electricGun = false;
-                    fireGun = true;
+                    fireGun = false;
                     rangeGun = false;
                 }
             }

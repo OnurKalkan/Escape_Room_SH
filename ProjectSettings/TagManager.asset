@@ -8,6 +8,8 @@ TagManager:
   - KeyCard
   - Item
   - Keypad
+  - NewLevel
+  - Ball
   layers:
   - Default
   - TransparentFX

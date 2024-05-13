@@ -9,7 +9,12 @@ public class Item : MonoBehaviour
 
     public enum Items
     {
+        None,
         KeyCard,
-        Coin
+        Coin,
+        RedSphere,
+        YellowCube,
+        GreenCylinder,
+        PurpleCapsule
     }
 }
