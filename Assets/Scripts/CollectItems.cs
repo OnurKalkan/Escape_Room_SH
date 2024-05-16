@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class CollectItems : MonoBehaviour
 {
-    public GameObject inventory, tempItem, itemSlotsParent;
+    public GameObject inventory, tempItem, itemSlotsParent, craftItemParents;
     bool activeItem;
 
     // Start is called before the first frame update
@@ -35,7 +35,7 @@ public class CollectItems : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && activeItem)
         {
             bool sameItem = false;
-            for (int i = 0; i < itemSlotsParent.transform.childCount; i++)
+            for (int i = 1; i < itemSlotsParent.transform.childCount; i++)
             {
                 if (itemSlotsParent.transform.GetChild(i).GetComponent<ItemSlot>().isCaptured == true && 
                     tempItem.GetComponent<Item>().items == itemSlotsParent.transform.GetChild(i).GetComponent<ItemSlot>().itemType)
@@ -47,11 +47,12 @@ public class CollectItems : MonoBehaviour
                     activeItem = false;
                     i = itemSlotsParent.transform.childCount;
                     sameItem = true;
+                    CraftingItemsCheck();
                 }
             }
             if (!sameItem)
             {
-                for (int i = 0; i < itemSlotsParent.transform.childCount; i++)
+                for (int i = 1; i < itemSlotsParent.transform.childCount; i++)
                 {
                     if (itemSlotsParent.transform.GetChild(i).GetComponent<ItemSlot>().isCaptured == false)
                     {
@@ -65,9 +66,18 @@ public class CollectItems : MonoBehaviour
                         tempItem = null;
                         activeItem = false;
                         i = itemSlotsParent.transform.childCount;
+                        CraftingItemsCheck();
                     }
                 }
             }                      
+        }
+    }
+
+    void CraftingItemsCheck()
+    {
+        for (int i = 1; i < craftItemParents.transform.childCount; i++)
+        {
+            craftItemParents.transform.GetChild(i).GetComponent<CraftItem>().CraftAvailabilityCheck();
         }
     }
 

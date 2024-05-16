@@ -15,6 +15,8 @@ public class Item : MonoBehaviour
         RedSphere,
         YellowCube,
         GreenCylinder,
-        PurpleCapsule
+        PurpleCapsule,
+        Weapon,
+        Secret
     }
 }
