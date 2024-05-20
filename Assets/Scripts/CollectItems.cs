@@ -25,11 +25,13 @@ public class CollectItems : MonoBehaviour
             { 
                 inventory.SetActive(false); 
                 Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
             }
             else 
             { 
                 inventory.SetActive(true);
                 Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
             }
         }
         if (Input.GetKeyDown(KeyCode.E) && activeItem)

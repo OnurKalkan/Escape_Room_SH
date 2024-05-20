@@ -10,6 +10,8 @@ TagManager:
   - Keypad
   - NewLevel
   - Ball
+  - RightHandSpot
+  - LeftHandSpot
   layers:
   - Default
   - TransparentFX
